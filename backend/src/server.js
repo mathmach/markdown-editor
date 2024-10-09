@@ -1,4 +1,3 @@
-
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -59,11 +58,8 @@ io.on("connection", (socket) => {
     );
   });
 
-  socket.on("user-cursor", ({ documentId, username, cursorPosition }) => {
-    socket.to(documentId).emit("update-cursor", {
-      username,
-      cursorPosition,
-    });
+  socket.on("cursor-position", ({ documentId, username, range }) => {
+    socket.to(documentId).emit("user-cursor", { username, range });
   });
 
   socket.on("edit-document", ({ documentId, content }) => {

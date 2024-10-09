@@ -1,9 +1,11 @@
-import { Box, Button, TextField, Toolbar, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Button, Toolbar, Typography } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import ReactQuill from "react-quill";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useSocket } from "../context/SocketContext";
 import { useDocuments } from "../hooks/useDocuments";
+import "react-quill/dist/quill.snow.css"; // Estilos do Quill
 
 const EditorPage: React.FC = () => {
   const { documentId } = useParams<{ documentId: string }>();
@@ -14,6 +16,7 @@ const EditorPage: React.FC = () => {
     useDocuments();
   const [document, setDocument] = useState<string>("");
   const [usersEditing, setUsersEditing] = useState<string[]>([]); // Lista de usuários editando
+  const quillRef = useRef<ReactQuill | null>(null); // Referência para o editor
 
   // Histórico de versões
   const [history, setHistory] = useState<string[]>([]);
@@ -58,10 +61,19 @@ const EditorPage: React.FC = () => {
       );
     });
 
+    socket.on("user-cursor", ({ username, range }: any) => {
+      const quill = quillRef.current?.getEditor();
+      if (quill && range) {
+        // Posicionar o cursor de outro usuário
+        quill.setSelection(range.index, range.length, "silent");
+      }
+    });
+
     // Limpeza da conexão ao desmontar o componente
     return () => {
       socket.off("document-updated"); // Remove o listener
       socket.off("active-users"); // Remove o listener
+      socket.off("user-cursor");
       socket.disconnect(); // Desconecta o socket
     };
 
@@ -69,10 +81,9 @@ const EditorPage: React.FC = () => {
   }, [documentId, user, socket]);
 
   // Função para atualizar o documento
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (text: string) => {
     setCurrentIndex(history.length - 1);
-    const newDocument = e.target.value;
-    update(newDocument);
+    update(text);
   };
 
   const update = async (content: string) => {
@@ -103,6 +114,11 @@ const EditorPage: React.FC = () => {
       setCurrentIndex(currentIndex + 1);
       update(history[currentIndex + 1]);
     }
+  };
+
+  const handleSelectionChange = (range: any) => {
+    // Enviar a posição do cursor para outros usuários
+    socket.emit("cursor-position", { username: user.username, documentId, range });
   };
 
   return (
@@ -138,15 +154,13 @@ const EditorPage: React.FC = () => {
           Salvar
         </Button>
       </Toolbar>
-      <TextField
-        label="Conteúdo do Documento"
-        variant="outlined"
-        fullWidth
-        multiline
-        rows={10}
+      <ReactQuill
+        theme="snow"
         value={document}
         onChange={handleChange}
-        margin="normal"
+        onChangeSelection={handleSelectionChange}
+        ref={quillRef}
+        style={{ height: "400px" }}
       />
     </Box>
   );

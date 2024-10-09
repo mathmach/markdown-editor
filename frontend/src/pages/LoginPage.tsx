@@ -39,7 +39,7 @@ const LoginPage: React.FC = () => {
           <form onSubmit={handleLogin} style={{ width: "100%" }}>
             <TextField
               variant="outlined"
-              label="Nome de Usuário"
+              label="Email"
               fullWidth
               margin="normal"
               value={email}
