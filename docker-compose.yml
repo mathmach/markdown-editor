@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Mapeia a porta 3000 do contêiner para a porta 3000 do host
+    environment:
+      - MONGO_URI=mongodb://db:27017/markdown-editor?authSource=admin
+      - JWT_SECRET=your_jwt_secret
+    depends_on:
+      - db # Dependência do banco de dados, se necessário
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:80" # Mapeia a porta 80 do contêiner para a porta 3001 do host
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:3000/api
+  db:
+    image: mongo
+    ports:
+      - "27017:27017"

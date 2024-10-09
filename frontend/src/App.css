@@ -1,0 +1,18 @@
+body {
+  background-color: #e0e0e0; /* Cor de fundo do body */
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.MuiContainer-root {
+  max-width: 1200px; /* Largura máxima para centralizar o conteúdo */
+}
+
+.MuiCard-root {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para os cards */
+}
