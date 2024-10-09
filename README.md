@@ -227,9 +227,7 @@ Este projeto está sob a licença [MIT](LICENSE).
 
 Se você tiver alguma dúvida, entre em contato:
 
-- Email: seu-email@exemplo.com
-- GitHub: [seu-usuario](https://github.com/seu-usuario)
+- Email: matheusmgduarte@outlook.com
+- GitHub: [mathmach](https://github.com/mathmach)
 
 ---
-
-Esse `README.md` cobre todos os pontos importantes, incluindo como rodar o projeto, configurar variáveis de ambiente, rodar testes, e uma explicação sobre as rotas da API. Se precisar de mais algum ajuste ou detalhe, é só me avisar!
