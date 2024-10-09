@@ -14,6 +14,10 @@ Principais dificultades:
 
 Este projeto é um editor colaborativo de documentos, similar ao Google Docs, com a funcionalidade de versionamento de documentos e edição em tempo real. O projeto inclui um front-end em **React** e um back-end que serve a API e gerencia a comunicação em tempo real com **Socket.IO**.
 
+![documents](.github/documents.png)
+
+![editor](.github/editor.png)
+
 ## 📑 Funcionalidades
 
 - Criação, listagem e exclusão de documentos.
